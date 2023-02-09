@@ -1,6 +1,7 @@
+
 # from tkinter import HORIZONTAL
 import streamlit as st
-from streamlit_option_menu import option_menu
+# from streamlit_option_menu import option_menu
 import streamlit as st
 import pickle
 import pandas as pd
@@ -10,20 +11,16 @@ import json
 from streamlit_lottie import st_lottie
 
 
-selected = option_menu(
-"Pick Your Choice", ['Books'],icons=[':movies:', ':books:',":tv:"],menu_icon="cast")
 
 
-if selected == 'Books':
-
-    def load_lottieurl(url: str):
+def load_lottieurl(url: str):
         r = requests.get(url)
         if r.status_code != 200:
             return None
         return r.json()
-    lottie_hello = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_kq5rGs.json")
+lottie_hello = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_kq5rGs.json")
 
-    def recommend(book_name):
+def recommend(book_name):
         book_index = np.where(pt.index==book_name)[0][0]
         distances = similarity[book_index]
         books_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[0:11]
@@ -43,7 +40,7 @@ if selected == 'Books':
         return recommended_books,recommended_books_posters,author,year,publisher
 
 
-    def selection(bookname):
+def selection(bookname):
         books_re,book_posters,author_de,years,pub= recommend(bookname)
         # st.write('Recommended Books')
        
@@ -107,19 +104,19 @@ if selected == 'Books':
             st.image(url)
 
 
-    books_dict = pickle.load(open('finalratings_dict.pkl', 'rb'))
-    similarity = pickle.load(open('similarity_scores.pkl', 'rb'))
-    pt = pickle.load(open('pt.pkl', 'rb'))
-    posters = pickle.load(open('posters.pkl', 'rb'))
-    all = pickle.load(open('all.pkl', 'rb'))
-    popular_dict = pickle.load(open('popular.pkl', 'rb'))
-    popular_books=popular_dict['Book-Title'].values
-    books = books_dict['Book-Title'].values
-    popular_pics= popular_dict['Image-URL-M'].values
+books_dict = pickle.load(open('finalratings_dict.pkl', 'rb'))
+similarity = pickle.load(open('similarity_scores.pkl', 'rb'))
+pt = pickle.load(open('pt.pkl', 'rb'))
+posters = pickle.load(open('posters.pkl', 'rb'))
+all = pickle.load(open('all.pkl', 'rb'))
+popular_dict = pickle.load(open('popular.pkl', 'rb'))
+popular_books=popular_dict['Book-Title'].values
+books = books_dict['Book-Title'].values
+popular_pics= popular_dict['Image-URL-M'].values
 
 
 
-    def top():
+def top():
         col1, col2, col3,col4,col5= st.columns(5)
         col6, col7, col8,col9,col10= st.columns(5)
         col11, col12, col13,col14,col15= st.columns(5)
@@ -283,13 +280,13 @@ if selected == 'Books':
             st.image(popular_pics[49])                      
     
 
-    right,left =st.columns(2)
-    with right:
-        st.title("Book Recommender")
-        selected_book =st.selectbox("select your favorite book",books)
+right,left =st.columns(2)
+with right:
+    st.title("Book Recommender")
+    selected_book =st.selectbox("select your favorite book",books)
     # with left:
     #     st_lottie(lottie_hello, height=400, key="hello")
-    if st.button('Search'):
-        selection(selected_book)
-    if st.button('Top 50 Books'):
+if st.button('Search'):
+    selection(selected_book)
+if st.button('Top 50 Books'):
         top()
