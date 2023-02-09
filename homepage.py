@@ -16,214 +16,10 @@ from streamlit_lottie import st_lottie
 #     st.session_state['key'] = 'value'
 
 selected = option_menu(
-"Pick Your Choice", ["Movies", 'Books'],icons=[':movies:', ':books:',":tv:"],menu_icon="cast",
+"Pick Your Choice", ['Books'],icons=[':movies:', ':books:',":tv:"],menu_icon="cast",
 orientation = HORIZONTAL
 )
 
-if selected == 'Movies':
-    movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
-    movies = pd.DataFrame(movies_dict)
-    movie_dictionary = pickle.load(open('dictionary.pkl', 'rb'))
-    similarity = pickle.load(open('similarity.pkl', 'rb'))
-    cast = pickle.load(open('cast.pkl', 'rb'))
-    votes= pickle.load(open('votes.pkl', 'rb'))
-
-
-
-    def load_lottieurl(url: str):
-        r = requests.get(url)
-        if r.status_code != 200:
-           return None
-        return r.json()
-
-
-    def fetch_poster(movies_id):
-        response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=306d75e9feb743e9c797d7329dfa20ae&language=en-US'.format(movies_id))
-        data = response.json()
-        try:
-            return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
-        except:
-            return     
-
-
-    def recommend(movie):
-        movie_index = movies[movies['title'] == movie].index[0]
-        distances = similarity[movie_index]
-        movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[0:16]
-        recommended_movies = []
-        recommended_movies_posters = []
-        movie_details = []
-        cast_d=[]
-        votes_details=[]
-        for i in movies_list:
-            movies_id = movies.iloc[i[0]].movie_id
-            movie_details.append(movie_dictionary.iloc[i[0]])
-            recommended_movies.append(movies.iloc[i[0]].title)
-            cast_d.append(cast.iloc[i[0]])
-            votes_details.append(votes.iloc[i[0]])
-            recommended_movies_posters.append(fetch_poster(movies_id))
-
-        return recommended_movies, recommended_movies_posters, movie_details,cast_d,votes_details
-
-
-
-
-    lottie_hello = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_feuwapl6.json")
-    lottie_end = load_lottieurl("https://assets8.lottiefiles.com/private_files/lf30_bb9bkg1h.json")
-
-    left, right = st.columns(2)
-    with left:
-        st.title('Movie Recommender')
-
-        selected_movie_name = st.selectbox('search your favourite movie for recommendation',movies['title'].values)
-        st.session_state['key']=selected_movie_name
-
-    with right:
-        st_lottie(lottie_hello, height=300, key="hello")
-
-
-    def selection(selected_movie_name):
-        names=[]
-        images=[]
-        movie_details=[]
-        names, images, movie_details,cast_details,votes_de= recommend(selected_movie_name)
-        searched_image, searched_info = st.columns((1, 2))
-        with searched_image:
-            st.image(images[0])
-        with searched_info:
-            st.header(names[0])
-            st.write("Overview")
-            st.write(movie_details[0])
-            st.write("Cast :"+cast_details[0])
-            st.write("average votes:"+str(votes_de[0]))
-
-
-        st.write('Recommended movies')
-        col1, col2, col3 = st.columns(3)
-        col4, col5, col6 = st.columns(3)
-        col7, col8, col9 = st.columns(3)
-        col10, col11, col12 = st.columns(3)
-        col13, col14, col15 = st.columns(3)
-
-        with col1:
-            try:
-                st.write(names[1])
-                st.image(images[1])
-                st.write("average votes:"+str(votes_de[1]))
-            except:
-                pass
-                
-            
-
-        with col2:
-            try:
-                st.write(names[2])
-                st.image(images[2])
-                st.write("average votes:" + str(votes_de[2]))
-            except:
-                pass
-
-        with col3:
-            try:
-                st.write(names[3])
-                st.image(images[3])
-                st.write("average votes:" + str(votes_de[3]))
-            except:
-                pass
-        with col4:
-            try:
-                st.write(names[4])
-                st.image(images[4])
-                st.write("average votes:"+str(votes_de[4]))
-            except:
-                pass
-        with col5:
-            try:
-                st.write(names[5])
-                st.image(images[5])
-                st.write("average votes:" + str(votes_de[5]))
-            except:
-                pass
-        with col6:
-            try:
-                st.write(names[6])
-                st.image(images[6])
-                st.write("average votes:" + str(votes_de[6]))
-            except:
-                pass
-        with col7:
-            try:
-                st.write(names[7])
-                st.image(images[7])
-                st.write("average votes:" + str(votes_de[7]))
-            except:
-                pass
-        with col8:
-            try:
-                st.write(names[8])
-                st.image(images[8])
-                st.write("average votes:" + str(votes_de[8]))
-            except:
-                pass
-        with col9:
-            try:
-                st.write(names[9])
-                st.image(images[9])
-                st.write("average votes:" + str(votes_de[9]))
-            except:
-                pass
-        with col10:
-            try:
-                st.write(names[10])
-                st.image(images[10])
-                st.write("average votes:" + str(votes_de[10]))
-            except:
-                pass
-        with col11:
-            try:
-                st.write(names[11])
-                st.image(images[11])
-                st.write("average votes:" + str(votes_de[11]))
-            except:
-                pass
-        with col12:
-            try:
-                st.write(names[12])
-                st.image(images[12])
-                st.write("average votes:" + str(votes_de[12]))
-            except:
-                pass
-        with col13:
-            try:
-                st.write(names[13])
-                st.image(images[13])
-                st.write("average votes:" + str(votes_de[13]))
-            except:
-                pass
-        with col14:
-            try:
-                st.write(names[14])
-                st.image(images[14])
-                st.write("average votes:" + str(votes_de[14]))
-            except:
-                pass
-        with col15:
-            try:
-                st.write(names[15])
-                st.image(images[15])
-                st.write("average votes:" + str(votes_de[15]))
-            except:
-                pass
-    
-    
-
-    if st.button('Search'):
-        selection(selected_movie_name)
-
-
-    st_lottie(lottie_end, height=300, key="end")
-
-#####################################################################################################
 
 
 if selected == 'Books':
@@ -516,7 +312,214 @@ if selected == 'Books':
         selection(selected_book)
     if st.button('Top 50 Books'):
         top()
+        
+        
+####################################################################        
 
+# if selected == 'Movies':
+#     movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
+#     movies = pd.DataFrame(movies_dict)
+#     movie_dictionary = pickle.load(open('dictionary.pkl', 'rb'))
+#     similarity = pickle.load(open('similarity.pkl', 'rb'))
+#     cast = pickle.load(open('cast.pkl', 'rb'))
+#     votes= pickle.load(open('votes.pkl', 'rb'))
+
+
+
+#     def load_lottieurl(url: str):
+#         r = requests.get(url)
+#         if r.status_code != 200:
+#            return None
+#         return r.json()
+
+
+#     def fetch_poster(movies_id):
+#         response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=306d75e9feb743e9c797d7329dfa20ae&language=en-US'.format(movies_id))
+#         data = response.json()
+#         try:
+#             return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
+#         except:
+#             return     
+
+
+#     def recommend(movie):
+#         movie_index = movies[movies['title'] == movie].index[0]
+#         distances = similarity[movie_index]
+#         movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[0:16]
+#         recommended_movies = []
+#         recommended_movies_posters = []
+#         movie_details = []
+#         cast_d=[]
+#         votes_details=[]
+#         for i in movies_list:
+#             movies_id = movies.iloc[i[0]].movie_id
+#             movie_details.append(movie_dictionary.iloc[i[0]])
+#             recommended_movies.append(movies.iloc[i[0]].title)
+#             cast_d.append(cast.iloc[i[0]])
+#             votes_details.append(votes.iloc[i[0]])
+#             recommended_movies_posters.append(fetch_poster(movies_id))
+
+#         return recommended_movies, recommended_movies_posters, movie_details,cast_d,votes_details
+
+
+
+
+#     lottie_hello = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_feuwapl6.json")
+#     lottie_end = load_lottieurl("https://assets8.lottiefiles.com/private_files/lf30_bb9bkg1h.json")
+
+#     left, right = st.columns(2)
+#     with left:
+#         st.title('Movie Recommender')
+
+#         selected_movie_name = st.selectbox('search your favourite movie for recommendation',movies['title'].values)
+#         st.session_state['key']=selected_movie_name
+
+#     with right:
+#         st_lottie(lottie_hello, height=300, key="hello")
+
+
+#     def selection(selected_movie_name):
+#         names=[]
+#         images=[]
+#         movie_details=[]
+#         names, images, movie_details,cast_details,votes_de= recommend(selected_movie_name)
+#         searched_image, searched_info = st.columns((1, 2))
+#         with searched_image:
+#             st.image(images[0])
+#         with searched_info:
+#             st.header(names[0])
+#             st.write("Overview")
+#             st.write(movie_details[0])
+#             st.write("Cast :"+cast_details[0])
+#             st.write("average votes:"+str(votes_de[0]))
+
+
+#         st.write('Recommended movies')
+#         col1, col2, col3 = st.columns(3)
+#         col4, col5, col6 = st.columns(3)
+#         col7, col8, col9 = st.columns(3)
+#         col10, col11, col12 = st.columns(3)
+#         col13, col14, col15 = st.columns(3)
+
+#         with col1:
+#             try:
+#                 st.write(names[1])
+#                 st.image(images[1])
+#                 st.write("average votes:"+str(votes_de[1]))
+#             except:
+#                 pass
+                
+            
+
+#         with col2:
+#             try:
+#                 st.write(names[2])
+#                 st.image(images[2])
+#                 st.write("average votes:" + str(votes_de[2]))
+#             except:
+#                 pass
+
+#         with col3:
+#             try:
+#                 st.write(names[3])
+#                 st.image(images[3])
+#                 st.write("average votes:" + str(votes_de[3]))
+#             except:
+#                 pass
+#         with col4:
+#             try:
+#                 st.write(names[4])
+#                 st.image(images[4])
+#                 st.write("average votes:"+str(votes_de[4]))
+#             except:
+#                 pass
+#         with col5:
+#             try:
+#                 st.write(names[5])
+#                 st.image(images[5])
+#                 st.write("average votes:" + str(votes_de[5]))
+#             except:
+#                 pass
+#         with col6:
+#             try:
+#                 st.write(names[6])
+#                 st.image(images[6])
+#                 st.write("average votes:" + str(votes_de[6]))
+#             except:
+#                 pass
+#         with col7:
+#             try:
+#                 st.write(names[7])
+#                 st.image(images[7])
+#                 st.write("average votes:" + str(votes_de[7]))
+#             except:
+#                 pass
+#         with col8:
+#             try:
+#                 st.write(names[8])
+#                 st.image(images[8])
+#                 st.write("average votes:" + str(votes_de[8]))
+#             except:
+#                 pass
+#         with col9:
+#             try:
+#                 st.write(names[9])
+#                 st.image(images[9])
+#                 st.write("average votes:" + str(votes_de[9]))
+#             except:
+#                 pass
+#         with col10:
+#             try:
+#                 st.write(names[10])
+#                 st.image(images[10])
+#                 st.write("average votes:" + str(votes_de[10]))
+#             except:
+#                 pass
+#         with col11:
+#             try:
+#                 st.write(names[11])
+#                 st.image(images[11])
+#                 st.write("average votes:" + str(votes_de[11]))
+#             except:
+#                 pass
+#         with col12:
+#             try:
+#                 st.write(names[12])
+#                 st.image(images[12])
+#                 st.write("average votes:" + str(votes_de[12]))
+#             except:
+#                 pass
+#         with col13:
+#             try:
+#                 st.write(names[13])
+#                 st.image(images[13])
+#                 st.write("average votes:" + str(votes_de[13]))
+#             except:
+#                 pass
+#         with col14:
+#             try:
+#                 st.write(names[14])
+#                 st.image(images[14])
+#                 st.write("average votes:" + str(votes_de[14]))
+#             except:
+#                 pass
+#         with col15:
+#             try:
+#                 st.write(names[15])
+#                 st.image(images[15])
+#                 st.write("average votes:" + str(votes_de[15]))
+#             except:
+#                 pass
+    
+    
+
+#     if st.button('Search'):
+#         selection(selected_movie_name)
+
+
+#     st_lottie(lottie_end, height=300, key="end")
+
+#####################################################################################################
 
 # if selected == "Series":
 #     def load_lottieurl(url: str):
