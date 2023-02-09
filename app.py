@@ -1,4 +1,4 @@
-from tkinter import HORIZONTAL
+# from tkinter import HORIZONTAL
 import streamlit as st
 from streamlit_option_menu import option_menu
 import streamlit as st
@@ -11,9 +11,7 @@ from streamlit_lottie import st_lottie
 
 
 selected = option_menu(
-"Pick Your Choice", ['Books'],icons=[':movies:', ':books:',":tv:"],menu_icon="cast",
-orientation = HORIZONTAL
-)
+"Pick Your Choice", ['Books'],icons=[':movies:', ':books:',":tv:"],menu_icon="cast")
 
 
 if selected == 'Books':
